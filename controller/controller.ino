@@ -14,7 +14,7 @@ RTC_DATA_ATTR static uint32_t bootcount; // remember number of boots in RTC Memo
 BLEAdvertising *pAdvertising;   // BLE Advertisement type
 struct timeval now;
 
-#define BEACON_UUID "87b99b2c-90fd-11e9-bc42-526af7764f64" // UUID 1 128-Bit (may use linux tool uuidgen or random numbers via https://www.uuidgenerator.net/)
+#define BEACON_UUID "87B99B2C-90FD-11E9-BC42-526AF7764F64" // UUID 1 128-Bit (may use linux tool uuidgen or random numbers via https://www.uuidgenerator.net/)
 
 void setBeacon() {
 
@@ -28,12 +28,14 @@ void setBeacon() {
 
   oAdvertisementData.setFlags(0x04); // BR_EDR_NOT_SUPPORTED 0x04
 
-  std::string strServiceData = "";
+  std::string strServiceData = "teest";
 
   strServiceData += (char)26;     // Len
   strServiceData += (char)0xFF;   // Type
   strServiceData += oBeacon.getData();
   oAdvertisementData.addData(strServiceData);
+
+  Serial.print(strServiceData);
 
   pAdvertising->setAdvertisementData(oAdvertisementData);
   pAdvertising->setScanResponseData(oScanResponseData);
@@ -48,7 +50,7 @@ void setup() {
   last = now.tv_sec;
 
   // Create the BLE Device
-  BLEDevice::init("ESP32 as iBeacon");
+  BLEDevice::init("HP-Conference-Beacon");
   // Create the BLE Server
   BLEServer *pServer = BLEDevice::createServer(); // <-- no longer required to instantiate BLEServer, less flash and ram usage
   pAdvertising = BLEDevice::getAdvertising();
@@ -57,11 +59,11 @@ void setup() {
   // Start advertising
   pAdvertising->start();
   Serial.println("Advertizing started...");
-  delay(100);
-  pAdvertising->stop();
-  Serial.printf("enter deep sleep\n");
-  esp_deep_sleep(1000000LL * GPIO_DEEP_SLEEP_DURATION);
-  Serial.printf("in deep sleep\n");
+  //delay(100);
+  //pAdvertising->stop();
+  //Serial.printf("enter deep sleep\n");
+  //esp_deep_sleep(1000000LL * GPIO_DEEP_SLEEP_DURATION);
+  //Serial.printf("in deep sleep\n");
 }
 
 void loop() {
